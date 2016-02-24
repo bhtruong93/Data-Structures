@@ -8,10 +8,18 @@ function Stack() {
 
   this.push = function(val) {
     items.push(val);
+
+    // If trying not to use Array methods...
+    // items[items.length] = val;
   };
 
   this.pop = function() {
     return items.pop();
+
+    // If trying not to use Array methods...
+    // var temp = items[items.length - 1];
+    // items.length = items.length - 1;
+    // return temp;
   };
 
   this.peek = function() {
