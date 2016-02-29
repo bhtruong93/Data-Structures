@@ -12,6 +12,26 @@ function Graph() {
     return status;
   };
 
+  // Helper function for DFS search
+  const visitDFS = (vertex, status, callback) => {
+    let neighbors = adjList[vertex];
+
+    status[vertex] = "Discovered";
+    if(!!callback){
+      callback(vertex);
+    }
+
+
+    for (var i = 0; i < neighbors.length; i++) {
+      if(status[neighbors[i]] == "Not Visited") {
+        visitDFS(neighbors[i], status, callback);
+      }
+    }
+
+    status[vertex] = "Finished";
+    return;
+  };
+
   this.addVertex = val => {
     vertices.push(val);
     adjList[val] = [];
@@ -75,6 +95,19 @@ function Graph() {
     }
     return predecessor;
   };
+
+  /*The DFS algorithm will start traversing the graph from the  rst speci ed vertex and will follow
+  a path until the last vertex of this path is visited, and then will backtrack and then follow the next path.
+  */
+  this.dfs = (callback) => {
+    const status = initializeStatus("Not Visited");
+
+    for (var i = 0; i < vertices.length; i++) {
+      if(status[vertices[i]] == "Not Visited") {
+        visitDFS(vertices[i], status, callback);
+      }
+    }
+  };
 }
 
 
@@ -93,6 +126,10 @@ function Graph() {
    graph.addEdge('B', 'E');
    graph.addEdge('B', 'F');
    graph.addEdge('E', 'I');
+
+   graph.dfs(function(vertex) {
+     console.log(vertex);
+   });
 
 
 // Map the distance using intermediate vertices between each vertex using BFS
@@ -116,5 +153,3 @@ for (let i = 1; i < myVertices.length; i++) {
   }
   myMap += "\n";
  }
-
- 
