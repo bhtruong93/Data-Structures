@@ -1,11 +1,13 @@
+"use strict";
+
 function Graph() {
   const vertices = [];
   const adjList = {};
 
-  const initializeStatus = () => {
+  const initializeStatus = (val) => {
     const status = {};
     for (var i = 0; i < vertices.length; i++) {
-      status[vertices[i]] = "Not Visited";
+      status[vertices[i]] = val;
     }
     return status;
   };
@@ -34,11 +36,15 @@ function Graph() {
 
   /* The BFS algorithm will start traversing the graph from the first specifed vertex and will visit all its neighbors (adjacent vertices)
   first, as it is visiting each layer of the graph at a time. It uses a queue to keep track of the order which a vertex is visited.
+
+  This BFS method will take a callback and use the callback in BFS fashion, it will return a predecessor object, which shows the predecessor for each vertex.
   */
   this.bfs = (vertex, callback) => {
     "use strict";
     const queue = [],
-          status = initializeStatus();
+          status = initializeStatus("Not Visited"),
+          distance = initializeStatus(0),
+          predecessor = initializeStatus(null);
 
     status[vertex] = "Discovered";
     queue.push(vertex);
@@ -49,8 +55,15 @@ function Graph() {
 
       for (var i = 0; i < neighbors.length; i++) {
         if(status[neighbors[i]] == "Not Visited") {
+
+          // For BFS
           status[neighbors[i]] = "Discovered";
           queue.push(neighbors[i]);
+
+          // For finding distance
+          distance[neighbors[i]] = distance[curr] + 1;
+          predecessor[neighbors[i]] = curr;
+
         }
       }
 
@@ -60,58 +73,48 @@ function Graph() {
         callback(curr);
       }
     }
+    return predecessor;
   };
-
-  /* The DFS algorithm will start traversing the graph from the first specifed vertex and will visit all its neighbors (adjacent vertices)
-  first, as it is visiting each layer of the graph at a time. It uses a queue to keep track of the order which a vertex is visited.
-  */
-  this.bfs = (vertex, callback) => {
-    "use strict";
-    const queue = [],
-          status = initializeStatus();
-
-    status[vertex] = "Discovered";
-    queue.push(vertex);
-
-    while(queue.length !== 0) {
-      let curr = queue.shift(),
-          neighbors = adjList[curr];
-
-      for (var i = 0; i < neighbors.length; i++) {
-        if(status[neighbors[i]] == "Not Visited") {
-          status[neighbors[i]] = "Discovered";
-          queue.push(neighbors[i]);
-        }
-      }
-
-      status[curr] = "Finished";
-
-      if(callback) {
-        callback(curr);
-      }
-    }
-  };
-
 }
 
- //
- // var graph = new Graph();
- //   var myVertices = ['A','B','C','D','E','F','G','H','I']; //{7}
- //   for (var i=0; i<myVertices.length; i++){ //{8}
- //       graph.addVertex(myVertices[i]);
- //   }
- //   graph.addEdge('A', 'B'); //{9}
- //   graph.addEdge('A', 'C');
- //   graph.addEdge('A', 'D');
- //   graph.addEdge('C', 'D');
- //   graph.addEdge('C', 'G');
- //   graph.addEdge('D', 'G');
- //   graph.addEdge('D', 'H');
- //   graph.addEdge('B', 'E');
- //   graph.addEdge('B', 'F');
- //   graph.addEdge('E', 'I');
- //
- //   function printNode(value){ //{16}
- //       console.log('Visited vertex: ' + value); //{17}
- //   }
- //   graph.bfs(myVertices[0], printNode); //{18}
+
+ var graph = new Graph();
+   var myVertices = ['A','B','C','D','E','F','G','H','I']; //{7}
+   for (var i=0; i<myVertices.length; i++){ //{8}
+       graph.addVertex(myVertices[i]);
+   }
+   graph.addEdge('A', 'B'); //{9}
+   graph.addEdge('A', 'C');
+   graph.addEdge('A', 'D');
+   graph.addEdge('C', 'D');
+   graph.addEdge('C', 'G');
+   graph.addEdge('D', 'G');
+   graph.addEdge('D', 'H');
+   graph.addEdge('B', 'E');
+   graph.addEdge('B', 'F');
+   graph.addEdge('E', 'I');
+
+
+// Map the distance using intermediate vertices between each vertex using BFS
+const first = myVertices[0],
+      predecessor = graph.bfs(first);
+
+let myMap = "";
+
+for (let i = 1; i < myVertices.length; i++) {
+  let temp = myVertices[i],
+      stack = [];
+
+  while(temp != first) {
+      stack.push(temp);
+      temp = predecessor[temp];
+  }
+
+  myMap += first;
+  while(stack.length > 0) {
+    myMap += " -> " + stack.pop();
+  }
+  myMap += "\n";
+ }
+
+ 
