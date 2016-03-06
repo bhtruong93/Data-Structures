@@ -2,59 +2,63 @@
 The diagram in the previous topic exempli es a binary search tree.
 */
 
-function BinarySearchTree() {
-  var Node = function(val) {
-    this.val = val;
-    this.right = null;
-    this.left = null;
-  };
-  var root = null;
+var BinarySearchTree = {
+  Node: function(val){
+    return {
+        val: val,
+        right: null,
+        left: null
+    };
+  },
 
-  this.insert = function(val) {
-    var newNode = new Node(val);
+  root: null,
 
-    if(root === null) {
-      root = newNode;
+  insert: function(val) {
+    var newNode = this.Node(val);
+
+    if(this.root === null) {
+      this.root = newNode;
       return;
     }
-    insertNode(root, newNode);
-  };
+    insertNode(this.root, newNode);
+  },
 
-  this.search = function(val) {
-    return searchNode(root, val);
-  };
+  search: function(val) {
+    return searchNode(this.root, val);
+  },
 
-  this.inOrderTraverse = function(callback) {
-    inOrderTraverseNode(root, callback);
-  };
+  inOrderTraverse: function(callback) {
+    inOrderTraverseNode(this.root, callback);
+  },
 
-  this.preOrderTraverse = function(callback) {
-    preOrderTraverseNode(root, callback);
-  };
+  preOrderTraverse: function(callback) {
+    preOrderTraverseNode(this.root, callback);
+  },
 
-  this.postOrderTraverse = function(callback) {
-    postOrderTraverseNode(root, callback);
-  };
+  postOrderTraverse: function(callback) {
+    postOrderTraverseNode(this.root, callback);
+  },
 
-  this.min = function() {
-    return minNode(root);
-  };
+  min: function() {
+    return minNode(this.root);
+  },
 
-  this.max = function() {
-    return maxNode(root);
-  };
+  max: function() {
+    return maxNode(this.root);
+  },
 
-  this.remove = function(val) {
-    removeNode(root, val);
-  };
+  remove: function(val) {
+    removeNode(this.root, val);
+  },
 
-  this.print = function() {
-    console.log(JSON.stringify(root));
-  };
+  print: function() {
+    console.log(JSON.stringify(this.root));
+  }
+};
 
   /// HELPER FUNCTIONS
 
-  var insertNode = function(node, newNode) {
+function insertNode(node, newNode) {
     if(node.val > newNode.val) {
       if(node.left === null) {
         node.left = newNode;
@@ -71,9 +75,9 @@ function BinarySearchTree() {
         insertNode(node.right, newNode);
       }
     }
-  };
+  }
 
-  var searchNode = function(node, val) {
+function searchNode(node, val) {
     if(node === null) {
       return false;
     }
@@ -86,33 +90,33 @@ function BinarySearchTree() {
     else {
       return searchNode(node.right, val);
     }
-  };
+  }
 
-  var inOrderTraverseNode = function(node, callback) {
+function inOrderTraverseNode(node, callback) {
     if(node !== null) {
       inOrderTraverseNode(node.left, callback);
-      callback(node.key);
+      callback(node);
       inOrderTraverseNode(node.right, callback);
     }
-  };
+  }
 
-  var preOrderTraverseNode = function(node, callback) {
+function preOrderTraverseNode(node, callback) {
     if(node !== null) {
       callback(node);
       preOrderTraverseNode(node.left, callback);
       preOrderTraverseNode(node.right, callback);
     }
-  };
+  }
 
-  var postOrderTraverseNode = function(node, callback) {
+function postOrderTraverseNode(node, callback) {
     if(node !== null) {
       postOrderTraverseNode(node.left, callback);
       postOrderTraverseNode(node.right, callback);
       callback(node);
     }
-  };
+  }
 
-  var minNode = function(node) {
+function minNode(node) {
     if(node) {
       while(node && node.left !== null) {
         node = node.left;
@@ -120,9 +124,9 @@ function BinarySearchTree() {
       return node;
     }
     return null;
-  };
+  }
 
-  var maxNode = function(node) {
+function maxNode(node) {
     if(node) {
       while(node && node.right !== null) {
         node = node.right;
@@ -130,9 +134,9 @@ function BinarySearchTree() {
       return node.val;
     }
     return null;
-  };
+  }
 
-  var removeNode = function(node, val) {
+function removeNode(node, val) {
     if(node === null) {
       return null;
     }
@@ -166,5 +170,4 @@ function BinarySearchTree() {
       removeNode(node.right, minRight);
       return node;
     }
-  };
 }
