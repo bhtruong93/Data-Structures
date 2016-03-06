@@ -151,7 +151,7 @@ function BinarySearchTree() {
         node = null;
         return node;
       }
-      // NOde has 1 child
+      // Node has 1 child
       if(node.left === null) {
         node = node.right;
         return node;
